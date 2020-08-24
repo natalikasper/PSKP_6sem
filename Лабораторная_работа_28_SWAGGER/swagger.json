@@ -1,0 +1,223 @@
+{
+    "swagger":"2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Swagger_lab28",
+        "description": "Phones API",
+        "termsOfService": "",
+        "contact":{
+            "name": "Swagger"
+        },
+        "lecense":{
+            "name": "1.0"
+        }
+    },
+    "host":"Kasper",
+    "basePath":"/api",
+    "schemes": ["http", "https"],
+    "consumes":["application/json"],
+    "produces":["application/json"],
+    "paths":{
+        "/phones":{
+            "get": {
+                "description":"Returns all phones from phone journal in format json",
+                "operationId": "findPhone",
+                "produces":["application/json", "application/xml", "text/xml", "text/html"],
+                "parameters":
+                [
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "description": "tags to filter by",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv"
+                    },
+                    {
+                    "name": "limit",
+                    "in": "query",
+                    "description": "max number of result to return",
+                    "required": false,
+                    "type": "integer",
+                    "format": "int32"
+                    }
+                ],
+                "responses":{
+                    "200": {
+                        "description": "phone responce",
+                        "schema": {
+                            "type":"array",
+                            "items":{
+                                "$ref":"#/definitions/Phone"
+                            }
+                        }
+                    },
+                    "default":{
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref":"#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            },
+            "post":{
+                "description":"Create new phone in the journal",
+                "operationId": "addPhone",
+                "produces":["application/json"],
+                "parameters":[
+                    {
+                        "name": "par",
+                        "in": "body",
+                        "description": "Add new phone to the journal",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/newPhone"
+                        }
+                    }
+                ],
+                "responses":{
+                    "200": {
+                        "description": "phone responce",
+                        "schema": {
+                            "$ref":"#/definitions/Phone"
+                        }
+                    },
+                    "default":{
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref":"#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/phone/{id}":{
+            "put":{
+                "description":"Returns a user based on a single ID, if the user does not have access to the phones",
+                "operationId": "findPhoneById",
+                "produces":["application/json", "application/xml", "text/xml", "text/html"],
+                "parameters":
+                [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of phone to fetch",
+                        "required": true,
+                        "type": "integer",
+                        "format":"int64"
+                    }
+                ],
+                "responses":{
+                    "200":{
+                        "description": "pet response",
+                        "schema":{
+                            "$ref":"#/definitions/Pet"
+                        }
+                    },
+                    "default":{
+                        "description":"unexpected error",
+                        "schema":{
+                            "$ref":"#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "description":"Delete a phone from journal on the ID supplied",
+                "operationId": "deletePhone",
+                "parameters":[
+                    {
+                        "name": "id",
+                        "in":"path",
+                        "description":"If of phone to delete",
+                        "required":true,
+                        "type":"integer",
+                        "format":"int64"
+                    }
+                ],
+                "responses":{
+                    "200":{
+                        "description":"Phone deleted"
+                    },
+                    "default":{
+                        "description":"unexpected error",
+                        "schema":{
+                            "$ref":"#/definitions/ErrorModel"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions":{
+        "Phones":{
+            "type":"object",
+            "allOf": [
+                {
+                    "$ref" :"#/definitions/Phone"
+                },
+                {
+                    "required":["id"],
+                    "properties":{
+                        "id":{
+                            "type":"integer",
+                            "format":"int64"
+                        }
+                    }
+                }
+            ] 
+        },
+        "Phone":{
+            "type":"object",
+            "required":["name"],
+            "properties":{
+                "name": {
+                    "type": "string"
+                },
+                "phone":{
+                    "type": "string"
+                }
+            }
+        },
+        "newPhone":{
+            "type":"object",
+            "required":["name"],
+            "properties":{
+                "name": {
+                    "type": "string"
+                },
+                "phone":{
+                    "type": "string"
+                }
+            }
+        },
+        "Pet":{
+            "type":"object",
+            "required":["name"],
+            "properties":{
+                "name": {
+                    "type": "string"
+                },
+                "phone":{
+                    "type": "string"
+                }
+            }
+        },
+        "ErrorModel":{
+            "type":"object",
+            "required":["code", "message"],
+            "properties":{
+                "code": {
+                    "type":"integer",
+                    "format":"int32"
+                },
+                "message":{
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
